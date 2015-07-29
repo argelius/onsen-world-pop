@@ -1,0 +1,73 @@
+<html ng-app="app">
+    <head>
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <title>Onsen World Population</title>
+
+        <script src="lib/angular.min.js"></script>
+        <script src="lib/d3.min.js"></script>
+        <script src="lib/nv.d3.min.js"></script>
+        <script src="lib/onsenui.min.js"></script>
+        <script src="index.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="lib/nv.d3.min.css">
+        <link rel="stylesheet" type="text/css" href="lib/onsenui.css">
+        <link rel="stylesheet" type="text/css" href="lib/onsen-css-components.css">
+
+        <style>
+          population-chart > svg {
+            height: calc(100% - 44px) !important;
+          }
+
+          .filter-input-container {
+            padding-left: 8px;
+            padding-right: 8px;
+            background-color: #47B8E4;
+            height: 44px;
+            line-height: 44px;
+          }
+
+          .year-select-container {
+            background-color: #47B8E4;
+          }
+        </style>
+    </head>
+    <body>
+      <ons-navigator var="navi">
+        <ons-toolbar>
+          <div class="center">World Population</div>
+        </ons-toolbar>
+
+        <div class="filter-input-container">
+          <input ng-model="query" type="search" value="" placeholder="Filter countries" class="search-input">
+        </div>
+
+        <ons-list ng-controller="CountriesController as countries">
+          <ons-list-item ng-click="countries.showCountry(country)" modifier="chevron" ng-repeat="country in countries.list | filter:query">
+            {{ country }}
+          </ons-list-item>
+        </ons-list>
+      </ons-navigator>
+
+      <ons-template id="country.html">
+        <ons-page ng-controller="CountryController as country">
+          <ons-toolbar>
+            <div class="left"><ons-back-button>Back</ons-back-button></div>
+            <div class="center">{{ country.name }}</div>
+          </ons-toolbar>
+
+          <ons-list class="year-select-container">
+            <ons-list-item>
+              <select
+                ng-model="country.year"
+                ng-options="year for year in country.years"
+                class="text-input text-input--transparent"
+                style="width: 100%; margin-top: 4px">
+              </select>
+            </ons-list-item>
+          </ons-list>
+
+          <population-chart ng-if="country.showChart" data="country.population"></population-chart>
+        </ons-page>
+      </ons-template>
+    </body>
+</html>
