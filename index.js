@@ -30,7 +30,7 @@ angular.module('app', ['onsen'])
   });
 
   var currentYear = (new Date()).getUTCFullYear();
-  this.year = (currentYear - 1) + '';
+  this.year = currentYear + '';
 
   this.years = [];
   for (var i = 1950; i <= 2100; i++) {
@@ -53,7 +53,7 @@ angular.module('app', ['onsen'])
 
 .service('Countries', ['$http', function($http) {
   this.get = function() {
-    return $http.get('http://api.population.io:80/1.0/countries')
+    return $http.get('/countries.json')
       .then(
         function(response) {
           return response.data.countries;
@@ -64,7 +64,7 @@ angular.module('app', ['onsen'])
 
 .service('Population', ['$http', function($http) {
   this.get = function(country, year) {
-    return $http.get('http://api.population.io:80/1.0/population/' + year + '/' + country + '/')
+    return $http.jsonp('http://api.population.io:80/1.0/population/' + year + '/' + country + '/?format=jsonp&callback=JSON_CALLBACK')
       .then(
         function(response) {
           return response.data;
